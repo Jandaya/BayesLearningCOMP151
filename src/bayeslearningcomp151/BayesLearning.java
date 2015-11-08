@@ -5,15 +5,24 @@
  */
 package bayeslearningcomp151;
 
-/**
- *
- * @author Joseph
- */
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+/* Joseph Andaya
+    COMP 151
+    11/2/2015
+    Project 3
+*/
+
 public class BayesLearning extends javax.swing.JFrame {
 
-    /**
-     * Creates new form BayesLearning
-     */
+   
+    private List<ReviewWord> RottenWordsList = new ArrayList<ReviewWord>();
+    private List<ReviewWord> FreshWordsList = new ArrayList<ReviewWord>();
+    
     public BayesLearning() {
         initComponents();
     }
@@ -32,6 +41,8 @@ public class BayesLearning extends javax.swing.JFrame {
         rottenReviewLabel = new javax.swing.JLabel();
         openFreshButton = new javax.swing.JButton();
         openRottenButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,17 +93,23 @@ public class BayesLearning extends javax.swing.JFrame {
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 272, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -140,10 +157,29 @@ public class BayesLearning extends javax.swing.JFrame {
             }
         });
     }
+    
+    public void readFile(File Selected, List<ReviewWord> id)throws IOException{
+        Scanner scan = new Scanner(Selected);
+        ReviewWord nTemp = new ReviewWord();
+        int count1 = 0;
+        double indata = 0.0;
+        while(scan.hasNext()){
+            nTemp.setWord(scan.next());
+            
+            count1++;
+            if(count1 > 2){
+                count1 = 0;
+                id.add(nTemp);
+                nTemp = new ReviewWord();
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel freshReviewLabel;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton openFreshButton;
     private javax.swing.JButton openRottenButton;
     private javax.swing.JLabel rottenReviewLabel;
