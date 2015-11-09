@@ -289,7 +289,7 @@ public class BayesLearning extends javax.swing.JFrame {
     
     public void printWordFrequencies(TreeMap<String, Integer> data){
         String a = "a";
-        textArea.append(data.get(a) + "\n");
+       // textArea.append(data.get(a) + "\n");
         textArea.append("Word Frequencies: \n");
         for(String word: data.keySet()){
             textArea.append(data.get(word) + " : " + word + "\n");
@@ -305,7 +305,8 @@ public class BayesLearning extends javax.swing.JFrame {
         double indata = 0.0;
         while(scan.hasNext()){
             //nTemp.setWord(scan.next());
-            word = scan.next();
+            // ignores cases, and replaces all punctuation
+            word = scan.next().toLowerCase().replaceAll("[^\\w]", "");
             if (data.containsKey(word))
             { 
                  count = data.get(word) + 1;
@@ -314,6 +315,7 @@ public class BayesLearning extends javax.swing.JFrame {
                 count = 1;
             data.put(word, count);
         }
+        System.out.println("Done");
     }
     
     
