@@ -14,6 +14,10 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import java.lang.StringBuilder;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Iterator;
 
 /* Joseph Andaya
     COMP 151
@@ -30,6 +34,7 @@ public class BayesLearning extends javax.swing.JFrame {
     private TreeMap<String, Integer> FreshWordsMap = new TreeMap<String, Integer>();
     private TreeMap<String, Double> RottenProbabilityMap = new TreeMap<String, Double>();
     private TreeMap<String, Double> FreshProbabilityMap = new TreeMap<String, Double>();
+    private List<String> wordList = new ArrayList<String>();
 
     private File selectedFile;
     private String sFile;
@@ -306,6 +311,7 @@ public class BayesLearning extends javax.swing.JFrame {
         while(scan.hasNext()){
             //nTemp.setWord(scan.next());
             // ignores cases, and replaces all punctuation
+            
             word = scan.next().toLowerCase().replaceAll("[^\\w]", "");
             if (data.containsKey(word))
             { 
@@ -314,10 +320,74 @@ public class BayesLearning extends javax.swing.JFrame {
             else
                 count = 1;
             data.put(word, count);
+                    
         }
         System.out.println("Done");
     }
     
+    public String StripString(String test){
+        int i = 0;
+        char temp;
+        StringBuilder aString = new StringBuilder();
+        while(i < test.length()){
+            temp = test.charAt(i);
+            if(Character.isAlphabetic(temp))
+                aString.append(temp);
+            i++;
+        }
+        return aString.toString();
+        
+    }
+    
+    public void readFile3(File Selected, TreeMap<String, Integer> data)throws IOException{
+        BufferedReader reader = new BufferedReader(new FileReader(Selected)); 
+        ReviewWord nTemp = new ReviewWord();
+        int count = 0, i = 0;
+        String word;
+        String temp2;
+        char temp;
+        StringBuilder aString = new StringBuilder();
+        double indata = 0.0;
+        while((word = reader.readLine()) != null){
+            //nTemp.setWord(scan.next());
+            // ignores cases, and replaces all punctuation
+            
+            //word = scan.next().toLowerCase().replaceAll("[^\\w]", "");
+            while(i < word.length()){
+                    temp = word.charAt(i);
+                if(Character.isAlphabetic(temp))
+                    aString.append(temp);
+                else if(Character.isSpaceChar(temp)){
+                    temp2 = aString.toString();
+                    wordList.add(temp2);
+                    aString = new StringBuilder();
+                }
+                    
+                i++;
+            }
+            displayWordList(wordList);
+            /*
+            if (data.containsKey(word))
+            { 
+                 count = data.get(word) + 1;
+            }
+            else
+                count = 1;
+            data.put(word, count);
+              */      
+        }
+        System.out.println("Done");
+    }
+    
+    public void displayWordList(List<String> List){
+        Iterator iter = List.iterator();
+        int i = 0;
+        while(iter.hasNext()){
+            textArea.append(List.get(i) + "\n");
+            iter.next();
+            i++;
+        }
+    }
     
     
     public void readFile2(File Selected, List<ReviewWord> id)throws IOException{
