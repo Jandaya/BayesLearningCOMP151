@@ -35,6 +35,9 @@ public class BayesLearning extends javax.swing.JFrame {
     private TreeMap<String, Double> RottenProbabilityMap = new TreeMap<String, Double>();
     private TreeMap<String, Double> FreshProbabilityMap = new TreeMap<String, Double>();
     private List<String> wordList = new ArrayList<String>();
+    
+    private int freshWordCount;
+    private int rottenWordCount;
 
     private File selectedFile;
     private String sFile;
@@ -207,6 +210,8 @@ public class BayesLearning extends javax.swing.JFrame {
     private void printFreshWordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFreshWordsButtonActionPerformed
         // TODO add your handling code here:
         printWordFrequencies(FreshWordsMap);
+        textArea.append("" + countNumberTotalOccurance(FreshWordsMap));
+        
     }//GEN-LAST:event_printFreshWordsButtonActionPerformed
 
     private void printRottenWordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printRottenWordsButtonActionPerformed
