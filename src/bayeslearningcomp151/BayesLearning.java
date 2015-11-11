@@ -67,6 +67,7 @@ public class BayesLearning extends javax.swing.JFrame {
         printRottenWordsButton = new javax.swing.JButton();
         calculateProbabilitiesButton = new javax.swing.JButton();
         openTestButton = new javax.swing.JButton();
+        printTestWordsButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
 
@@ -118,6 +119,13 @@ public class BayesLearning extends javax.swing.JFrame {
             }
         });
 
+        printTestWordsButton.setText("Print Test Words");
+        printTestWordsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printTestWordsButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -127,6 +135,8 @@ public class BayesLearning extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(openTestButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(printTestWordsButton)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,15 +145,15 @@ public class BayesLearning extends javax.swing.JFrame {
                                     .addComponent(openFreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(freshReviewLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(printFreshWordsButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(printFreshWordsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(calculateProbabilitiesButton))
                             .addComponent(rottenReviewLabel)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(openRottenButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(printRottenWordsButton)))
-                        .addGap(65, 272, Short.MAX_VALUE))))
+                        .addGap(172, 260, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,7 +175,9 @@ public class BayesLearning extends javax.swing.JFrame {
                     .addComponent(openRottenButton)
                     .addComponent(printRottenWordsButton))
                 .addGap(33, 33, 33)
-                .addComponent(openTestButton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(openTestButton)
+                    .addComponent(printTestWordsButton))
                 .addContainerGap(62, Short.MAX_VALUE))
         );
 
@@ -225,7 +237,6 @@ public class BayesLearning extends javax.swing.JFrame {
     }//GEN-LAST:event_openRottenButtonActionPerformed
 
     private void printFreshWordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFreshWordsButtonActionPerformed
-        // TODO add your handling code here:
         printWordFrequencies(FreshWordsMap);
         textArea.append("" + countNumberTotalOccurance(FreshWordsMap));
         
@@ -255,6 +266,11 @@ public class BayesLearning extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_openTestButtonActionPerformed
+
+    private void printTestWordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printTestWordsButtonActionPerformed
+        printWordFrequencies(TestWordsMap);
+        textArea.append("" + countNumberTotalOccurance(TestWordsMap));
+    }//GEN-LAST:event_printTestWordsButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -458,6 +474,7 @@ public class BayesLearning extends javax.swing.JFrame {
     private javax.swing.JButton openTestButton;
     private javax.swing.JButton printFreshWordsButton;
     private javax.swing.JButton printRottenWordsButton;
+    private javax.swing.JButton printTestWordsButton;
     private javax.swing.JLabel rottenReviewLabel;
     private javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
