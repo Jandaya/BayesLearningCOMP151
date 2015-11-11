@@ -32,8 +32,10 @@ public class BayesLearning extends javax.swing.JFrame {
     private List<ReviewWord> FreshWordsList = new ArrayList<ReviewWord>();
     private TreeMap<String, Integer> RottenWordsMap = new TreeMap<String, Integer>();
     private TreeMap<String, Integer> FreshWordsMap = new TreeMap<String, Integer>();
+    private TreeMap<String, Integer> TestWordsMap = new TreeMap<String, Integer>();
     private TreeMap<String, Double> RottenProbabilityMap = new TreeMap<String, Double>();
     private TreeMap<String, Double> FreshProbabilityMap = new TreeMap<String, Double>();
+    private TreeMap<String, Double> TestProbabilityMap = new TreeMap<String, Double>();
     private List<String> wordList = new ArrayList<String>();
     
     private int freshWordCount;
@@ -64,6 +66,7 @@ public class BayesLearning extends javax.swing.JFrame {
         printFreshWordsButton = new javax.swing.JButton();
         printRottenWordsButton = new javax.swing.JButton();
         calculateProbabilitiesButton = new javax.swing.JButton();
+        openTestButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
 
@@ -101,10 +104,17 @@ public class BayesLearning extends javax.swing.JFrame {
             }
         });
 
-        calculateProbabilitiesButton.setText("Calculate Probabilities");
+        calculateProbabilitiesButton.setText("Calculate Fresh");
         calculateProbabilitiesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 calculateProbabilitiesButtonActionPerformed(evt);
+            }
+        });
+
+        openTestButton.setText("Open Test");
+        openTestButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openTestButtonActionPerformed(evt);
             }
         });
 
@@ -113,43 +123,50 @@ public class BayesLearning extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addComponent(openTestButton)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(openRottenButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(openFreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rottenReviewLabel)
-                                    .addComponent(freshReviewLabel)))
-                            .addComponent(printFreshWordsButton)
-                            .addComponent(printRottenWordsButton)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(calculateProbabilitiesButton)))
-                .addContainerGap(408, Short.MAX_VALUE))
+                                    .addComponent(openFreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(freshReviewLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(printFreshWordsButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(calculateProbabilitiesButton))
+                            .addComponent(rottenReviewLabel)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(openRottenButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(printRottenWordsButton)))
+                        .addGap(65, 272, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(freshReviewLabel)
-                    .addComponent(openFreshButton))
-                .addGap(9, 9, 9)
-                .addComponent(printFreshWordsButton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(freshReviewLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(openFreshButton)
+                            .addComponent(printFreshWordsButton)
+                            .addComponent(calculateProbabilitiesButton))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(rottenReviewLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rottenReviewLabel)
-                    .addComponent(openRottenButton))
-                .addGap(18, 18, 18)
-                .addComponent(printRottenWordsButton)
-                .addGap(31, 31, 31)
-                .addComponent(calculateProbabilitiesButton)
-                .addContainerGap(36, Short.MAX_VALUE))
+                    .addComponent(openRottenButton)
+                    .addComponent(printRottenWordsButton))
+                .addGap(33, 33, 33)
+                .addComponent(openTestButton)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         textArea.setColumns(20);
@@ -167,7 +184,7 @@ public class BayesLearning extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -222,6 +239,22 @@ public class BayesLearning extends javax.swing.JFrame {
         calculateProbabilities(FreshWordsMap, FreshProbabilityMap);
         printProbability(FreshProbabilityMap);
     }//GEN-LAST:event_calculateProbabilitiesButtonActionPerformed
+
+    private void openTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openTestButtonActionPerformed
+        int returnVal = fc.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+        {
+            // clear the list for new file
+            selectedFile  = fc.getSelectedFile();
+            sFile = selectedFile.toString();
+            try {
+                readFile(selectedFile, TestWordsMap);
+                //freshReviewLabel.setText("Fresh Review File: " + sFile);
+            } catch (IOException ex) {
+                Logger.getLogger(BayesLearning.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_openTestButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -316,8 +349,11 @@ public class BayesLearning extends javax.swing.JFrame {
         while(scan.hasNext()){
             //nTemp.setWord(scan.next());
             // ignores cases, and replaces all punctuation
+            //word = scan.next().toLowerCase().replaceAll("[^\\w]", "");
             
-            word = scan.next().toLowerCase().replaceAll("[^\\w]", "");
+            // replaces punctuation except for apostrophe.
+            word = scan.next().toLowerCase().replaceAll("[\\p{P}&&[^\u0027]]", "");
+            
             if (data.containsKey(word))
             { 
                  count = data.get(word) + 1;
@@ -419,6 +455,7 @@ public class BayesLearning extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton openFreshButton;
     private javax.swing.JButton openRottenButton;
+    private javax.swing.JButton openTestButton;
     private javax.swing.JButton printFreshWordsButton;
     private javax.swing.JButton printRottenWordsButton;
     private javax.swing.JLabel rottenReviewLabel;
