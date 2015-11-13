@@ -31,6 +31,7 @@ public class BayesLearning extends javax.swing.JFrame {
     private double FreshPercentage;
     private double CONSTANTSHIFT = 100.0;
     
+    private List<String> generalWordList = new ArrayList<String>();
     
     private List<ReviewWord> RottenWordsList = new ArrayList<ReviewWord>();
     private List<ReviewWord> FreshWordsList = new ArrayList<ReviewWord>();
@@ -40,6 +41,10 @@ public class BayesLearning extends javax.swing.JFrame {
     private TreeMap<String, Double> RottenProbabilityMap = new TreeMap<String, Double>();
     private TreeMap<String, Double> FreshProbabilityMap = new TreeMap<String, Double>();
     private TreeMap<String, Double> TestProbabilityMap = new TreeMap<String, Double>();
+    
+    private TreeMap<String, Double> unkFreshProbabilityMap = new TreeMap<String, Double>();
+    private TreeMap<String, Double> unkRottenProbabilityMap = new TreeMap<String, Double>();
+    
     private List<String> wordList = new ArrayList<String>();
     
     private int freshWordCount;
@@ -233,24 +238,28 @@ public class BayesLearning extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(freshPercentageField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(RottenPercentageField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)))
-                        .addGap(202, 202, 202)
-                        .addComponent(testButton))
-                    .addComponent(freshReviewLabel)
-                    .addComponent(rottenReviewLabel)
-                    .addComponent(testFileLabel))
-                .addContainerGap(34, Short.MAX_VALUE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(freshPercentageField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel3))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(RottenPercentageField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel4)))
+                                .addGap(202, 202, 202)
+                                .addComponent(testButton))
+                            .addComponent(freshReviewLabel)
+                            .addComponent(testFileLabel))
+                        .addContainerGap(34, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(rottenReviewLabel)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,6 +325,7 @@ public class BayesLearning extends javax.swing.JFrame {
             sFile = selectedFile.toString();
             try {
                 readFile(selectedFile, FreshWordsMap);
+                createUnknown(FreshWordsMap);
                 freshReviewLabel.setText("Fresh Review File: " + sFile);
                 calculateProbabilities(FreshWordsMap, FreshProbabilityMap);
             } catch (IOException ex) {
@@ -333,6 +343,7 @@ public class BayesLearning extends javax.swing.JFrame {
             sFile = selectedFile.toString();
             try {
                 readFile(selectedFile, RottenWordsMap);
+                createUnknown(RottenWordsMap);
                 rottenReviewLabel.setText("Rotten Review File: " + sFile);
                 calculateProbabilities(RottenWordsMap, RottenProbabilityMap);
                 
@@ -344,6 +355,7 @@ public class BayesLearning extends javax.swing.JFrame {
 
     private void printFreshWordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFreshWordsButtonActionPerformed
         printWordFrequencies(FreshWordsMap);        
+        textArea.append("\nNumber of Unknown words based on 10% of total number of words: " + FreshWordsMap.get("UNK"));
     }//GEN-LAST:event_printFreshWordsButtonActionPerformed
 
     private void printRottenWordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printRottenWordsButtonActionPerformed
@@ -390,6 +402,13 @@ public class BayesLearning extends javax.swing.JFrame {
             RottenPercentage = Double.parseDouble(temp2);
             RottenPercentage = RottenPercentage *0.01;
             
+            
+            //int unk = countNumberUnknown(FreshWordsMap, TestWordsMap);
+            //int unk2 = countNumberUnknown(RottenWordsMap, TestWordsMap);
+            //reCalculateProbabilities(FreshWordsMap, FreshProbabilityMap, unkFreshProbabilityMap, unk);
+            //reCalculateProbabilities(RottenWordsMap, RottenProbabilityMap, unkRottenProbabilityMap, unk2);
+            //printProbability(unkFreshProbabilityMap);
+            
             resultFresh = bayes(FreshProbabilityMap, TestProbabilityMap, FreshWordsMap, TestWordsMap, FreshPercentage);
             resultRotten = bayes(RottenProbabilityMap, TestProbabilityMap, RottenWordsMap, TestWordsMap, FreshPercentage);
             
@@ -397,6 +416,7 @@ public class BayesLearning extends javax.swing.JFrame {
             textArea.append("\nResult Rotten: " + resultRotten);
             
             makeDecision(resultFresh, resultRotten);
+            
         }
     }//GEN-LAST:event_testButtonActionPerformed
 
@@ -453,17 +473,19 @@ public class BayesLearning extends javax.swing.JFrame {
         else
             textArea.append("\nRotten!");
     }
+    
     public double bayes(TreeMap<String, Double> trainingProbability, TreeMap<String, Double> testProbability, 
                         TreeMap<String, Integer> trainingWords, TreeMap<String, Integer> testWords, double overall){
         double temp;
+        double unknownProb = trainingProbability.get("UNK");
         textArea.append("\nOverall: " + overall);
         textArea.append("\nKnown: " + knownWordProbability(trainingProbability, testProbability));
-        textArea.append("\nUnknown: " + unknownWordProbability(trainingWords, testWords));
-        temp = overall * knownWordProbability(trainingProbability, testProbability) * unknownWordProbability(trainingWords, testWords);
+        textArea.append("\nUnknown: " + unknownProb);
+        temp = overall * knownWordProbability(trainingProbability, testProbability) * unknownProb; //* unknownWordProbability(trainingWords, testWords);
         return temp;
     }
     
-    public double knownWordProbability(TreeMap<String, Double> training, TreeMap<String, Double> test){
+    public double knownWordProbability(TreeMap<String, Double> training, TreeMap<String, Double> test){//, TreeMap<String, Integer> testWordMap){
         double prob = -1000;
         for(String i: test.keySet() ){
             if(training.containsKey(i)){
@@ -473,7 +495,9 @@ public class BayesLearning extends javax.swing.JFrame {
                     System.out.println(prob);
                 }
                 else
-                    prob = prob * test.get(i);
+                    // get the number of occurances, multiply the probability that many times.
+                    for(int j = 0; j < TestWordsMap.get(i); j++)
+                        prob = prob * training.get(i);
             }
         }
                             System.out.println(prob);
@@ -486,11 +510,11 @@ public class BayesLearning extends javax.swing.JFrame {
         int commonCount = 0, unknownCount = 0, overallCount = 0;
         for(String i: test.keySet()){
             if(training.containsKey(i))
-                //commonCount++;
-                commonCount+=test.get(i);
+                commonCount++;
+                //commonCount+=test.get(i);
             else
-                //unknownCount++;
-                unknownCount+=test.get(i);
+                unknownCount++;
+                //unknownCount+=test.get(i);
         }
         System.out.println("unknown count: " + unknownCount);
         System.out.println("common count: " + commonCount);
@@ -505,11 +529,28 @@ public class BayesLearning extends javax.swing.JFrame {
     public void calculateProbabilities(TreeMap<String, Integer> wordMap, TreeMap<String, Double> probMap){
         double probability;
         int numOccurance = 0;
+        
         numOccurance = countNumberTotalOccurance(wordMap);
         for(String word: wordMap.keySet()){
             probability = ((double)wordMap.get(word) / (double)numOccurance) * CONSTANTSHIFT;
             probMap.put(word, probability);
         }
+    }
+    
+    public void reCalculateProbabilities(TreeMap<String, Integer> wordMap, TreeMap<String, Double> probMap, TreeMap<String, Double> newMap,
+                                            int unk){
+        double probability;
+        int numOccurance = 0;
+        double unkProb;
+        numOccurance = countNumberTotalOccurance(wordMap) + unk;
+        for(String word: wordMap.keySet()){
+            
+            probability = ((double)wordMap.get(word) / (double)numOccurance) * CONSTANTSHIFT;
+            newMap.put(word, probability);
+        }
+        // add the unknown probability to the list
+        unkProb = unk/(double)numOccurance;
+        newMap.put("unknown", unkProb);
     }
     
     public int countNumberTotalOccurance(TreeMap<String, Integer> a){
@@ -519,17 +560,15 @@ public class BayesLearning extends javax.swing.JFrame {
         }
         return count;
     }
-    public static int getCount(String word, TreeMap<String, Integer> frequencyData)
-   {
-      if (frequencyData.containsKey(word))
-      { 
-	   return frequencyData.get(word);
-      }
-      else
-      { 
-         return 0;
-      }
-   }
+    
+    public void createUnknown(TreeMap<String, Integer> map){
+        int numWords = countNumberTotalOccurance(map);
+        double proportion = 0.1;
+        int numberUnknown = 0;
+        proportion = numWords * 0.1;
+        numberUnknown = (int)proportion;
+        map.put("UNK", numberUnknown);
+    }
     
     public void printProbability(TreeMap<String, Double> prob){
         textArea.append("\nProbabilities: \n");
@@ -648,15 +687,37 @@ public class BayesLearning extends javax.swing.JFrame {
         int count1 = 0;
         double indata = 0.0;
         while(scan.hasNext()){
-            nTemp.setWord(scan.next());        
-            
-            count1++;
-            if(count1 > 2){
-                count1 = 0;
-                id.add(nTemp);
-                nTemp = new ReviewWord();
-            }
+            generalWordList.add(scan.next());
         }
+    }
+    
+    public void addWordsToWordMap(List<String> afile){
+        Iterator iter = afile.iterator();
+        int i = 0;
+        String word;
+        /*
+        while(iter.hasNext()){
+            word = iter.next().toLowerCase().replaceAll("[\\p{P}&&[^\u0027]]", "");
+            
+            if (data.containsKey(word))
+            { 
+                 count = data.get(word) + 1;
+            }
+            else
+                count = 1;
+            data.put(word, count);
+            i++;
+        }*/
+    }
+    
+    public int countWordList(List<String> afile){
+        Iterator iter = afile.iterator();
+        int i = 0;
+        while(iter.hasNext()){
+            iter.next();
+            i++;
+        }
+        return i;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
