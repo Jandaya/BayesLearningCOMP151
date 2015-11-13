@@ -479,7 +479,7 @@ public class BayesLearning extends javax.swing.JFrame {
         double temp;
         double unknownProb = trainingProbability.get("UNK");
         textArea.append("\nOverall: " + overall);
-        textArea.append("\nKnown: " + knownWordProbability(trainingProbability, testProbability));
+        //textArea.append("\nKnown: " + knownWordProbability(trainingProbability, testProbability));
         textArea.append("\nUnknown: " + unknownProb);
         temp = overall * knownWordProbability(trainingProbability, testProbability) * unknownProb; //* unknownWordProbability(trainingWords, testWords);
         return temp;
@@ -491,11 +491,17 @@ public class BayesLearning extends javax.swing.JFrame {
             if(training.containsKey(i)){
                 if (prob == -1000)
                 {
-                    prob = test.get(i);
+                    prob = training.get(i);
+                    textArea.append("\nStarting known probability: ");
+                    textArea.append("\nString: " + i + " count:" + TestWordsMap.get(i) );
+                    // starting at 1 to skip the amount of words
+                    for(int j = 1; j < TestWordsMap.get(i); j++)
+                        prob = prob * training.get(i);
                     System.out.println(prob);
                 }
                 else
                     // get the number of occurances, multiply the probability that many times.
+                    textArea.append("\nString: " + i + " count:" + TestWordsMap.get(i) );
                     for(int j = 0; j < TestWordsMap.get(i); j++)
                         prob = prob * training.get(i);
             }
