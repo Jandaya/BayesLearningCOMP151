@@ -5,8 +5,8 @@
 
     Note: probabilities have been shifted by *100 defined by variable CONSTANTSHIFT
 */
-package bayeslearningcomp151;
 
+package bayeslearningcomp151;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -611,12 +611,12 @@ public class BayesLearning extends javax.swing.JFrame {
                 {
                     prob = training.get(i);
                     // starting at 1 to skip the amount of words
-                    //for(int j = 1; j < TestWordsMap.get(i); j++)
-                       // prob = prob * training.get(i);
+                    for(int j = 1; j < TestWordsMap.get(i); j++)
+                        prob = prob * training.get(i);
                 }
                 else
                     // get the number of occurances, multiply the probability that many times.
-                    //for(int j = 0; j < TestWordsMap.get(i); j++)
+                    for(int j = 0; j < TestWordsMap.get(i); j++)
                         prob = prob * training.get(i);
             }
         }
@@ -724,7 +724,6 @@ public class BayesLearning extends javax.swing.JFrame {
     // algorithm to read in file. will strip all special characters except '
     public void readFile(File Selected, TreeMap<String, Integer> data)throws IOException{
         Scanner scan = new Scanner(Selected);
-        ReviewWord nTemp = new ReviewWord();
         int count = 0;
         String word;
         double indata = 0.0;
