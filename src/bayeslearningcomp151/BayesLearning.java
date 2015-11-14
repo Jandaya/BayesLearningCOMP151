@@ -410,7 +410,7 @@ public class BayesLearning extends javax.swing.JFrame {
             //printProbability(unkFreshProbabilityMap);
             
             resultFresh = bayes(FreshProbabilityMap, TestProbabilityMap, FreshWordsMap, TestWordsMap, FreshPercentage);
-            resultRotten = bayes(RottenProbabilityMap, TestProbabilityMap, RottenWordsMap, TestWordsMap, FreshPercentage);
+            resultRotten = bayes(RottenProbabilityMap, TestProbabilityMap, RottenWordsMap, TestWordsMap, RottenPercentage);
             
             textArea.append("\nResult Fresh: " + resultFresh);
             textArea.append("\nResult Rotten: " + resultRotten);
@@ -470,8 +470,10 @@ public class BayesLearning extends javax.swing.JFrame {
         if(fresh > rotten){
             textArea.append("\nFresh!");
         }
-        else
+        else if(rotten > fresh)
             textArea.append("\nRotten!");
+        else
+            textArea.append("\nNeutral.");
     }
     
     public double bayes(TreeMap<String, Double> trainingProbability, TreeMap<String, Double> testProbability, 
@@ -492,8 +494,6 @@ public class BayesLearning extends javax.swing.JFrame {
                 if (prob == -1000)
                 {
                     prob = training.get(i);
-                    textArea.append("\nStarting known probability: ");
-                    textArea.append("\nString: " + i + " count:" + TestWordsMap.get(i) );
                     // starting at 1 to skip the amount of words
                     for(int j = 1; j < TestWordsMap.get(i); j++)
                         prob = prob * training.get(i);
@@ -501,7 +501,6 @@ public class BayesLearning extends javax.swing.JFrame {
                 }
                 else
                     // get the number of occurances, multiply the probability that many times.
-                    textArea.append("\nString: " + i + " count:" + TestWordsMap.get(i) );
                     for(int j = 0; j < TestWordsMap.get(i); j++)
                         prob = prob * training.get(i);
             }
