@@ -79,6 +79,7 @@ public class BayesLearning extends javax.swing.JFrame {
         testFileLabel = new javax.swing.JLabel();
         resetButton = new javax.swing.JButton();
         clearButton = new javax.swing.JButton();
+        errorLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
 
@@ -260,19 +261,20 @@ public class BayesLearning extends javax.swing.JFrame {
             }
         });
 
+        errorLabel.setForeground(new java.awt.Color(255, 51, 0));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(freshReviewLabel)
-                                .addComponent(testFileLabel)
-                                .addComponent(rottenReviewLabel))
+                            .addComponent(freshReviewLabel)
+                            .addComponent(testFileLabel)
+                            .addComponent(rottenReviewLabel)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
@@ -293,11 +295,15 @@ public class BayesLearning extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(clearButton)
                                     .addComponent(resetButton)))))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(errorLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -314,7 +320,9 @@ public class BayesLearning extends javax.swing.JFrame {
                 .addComponent(testFileLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(errorLabel)
+                .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(freshPercentageField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
@@ -438,7 +446,7 @@ public class BayesLearning extends javax.swing.JFrame {
         //textArea.append("\n" + knownWordProbability(FreshProbabilityMap, TestProbabilityMap));
         if(freshPercentageField.getText().isEmpty() ||RottenPercentageField.getText().isEmpty())
         {
-            
+            errorLabel.setText("Invalid percentages");
         }
         else{
             String temp, temp2;
@@ -583,7 +591,13 @@ public class BayesLearning extends javax.swing.JFrame {
                         TreeMap<String, Integer> trainingWords, TreeMap<String, Integer> testWords, double overall){
         double temp;
         double unknownProb = trainingProbability.get("UNK");
-        temp = overall * knownWordProbability(trainingProbability, testProbability) * unknownProb; //* unknownWordProbability(trainingWords, testWords);
+        if (unknownProb == 0.0){
+            unknownProb = 1;
+        }
+        double knownProb = knownWordProbability(trainingProbability, testProbability);
+        System.out.println("\nUnKnown Probability: " + unknownProb);
+        System.out.println("\nKnown Probability: " + knownProb);
+        temp = overall * knownProb * unknownProb; //* unknownWordProbability(trainingWords, testWords);
         return temp;
     }
     
@@ -597,12 +611,12 @@ public class BayesLearning extends javax.swing.JFrame {
                 {
                     prob = training.get(i);
                     // starting at 1 to skip the amount of words
-                    for(int j = 1; j < TestWordsMap.get(i); j++)
-                        prob = prob * training.get(i);
+                    //for(int j = 1; j < TestWordsMap.get(i); j++)
+                       // prob = prob * training.get(i);
                 }
                 else
                     // get the number of occurances, multiply the probability that many times.
-                    for(int j = 0; j < TestWordsMap.get(i); j++)
+                    //for(int j = 0; j < TestWordsMap.get(i); j++)
                         prob = prob * training.get(i);
             }
         }
@@ -738,6 +752,7 @@ public class BayesLearning extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField RottenPercentageField;
     private javax.swing.JButton clearButton;
+    private javax.swing.JLabel errorLabel;
     private javax.swing.JTextField freshPercentageField;
     private javax.swing.JLabel freshReviewLabel;
     private javax.swing.JLabel jLabel1;
